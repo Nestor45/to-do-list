@@ -6583,12 +6583,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'home',
   data: function data() {
     return {
       reveal: false
     };
+  },
+  computed: {
+    welcome: function welcome() {
+      return this.$store.getters.welcome;
+    }
   }
 });
 
@@ -6669,6 +6677,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_6__["default"]({
 var app = new vue__WEBPACK_IMPORTED_MODULE_5__["default"]({
   el: '#app',
   router: router,
+  store: store,
   vuetify: vuetify,
   components: {
     MainApp: _components_MainApp_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
@@ -6746,8 +6755,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  state: {},
-  getters: {},
+  state: {
+    welcomeMessage: 'Welcome to my vue app'
+  },
+  getters: {
+    welcome: function welcome(state) {
+      return state.welcomeMessage;
+    }
+  },
   mutations: {},
   actions: {}
 });
@@ -30071,98 +30086,108 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "v-card",
-    { staticClass: "mx-auto", attrs: { "max-width": "344" } },
+    "div",
+    { staticClass: "container" },
     [
-      _c("v-card-text", [
-        _c("div", [_vm._v("Word of the Day")]),
-        _vm._v(" "),
-        _c("p", { staticClass: "text-h4 text--primary" }, [
-          _vm._v("\n            el·ee·mos·y·nar·y\n        "),
-        ]),
-        _vm._v(" "),
-        _c("p", [_vm._v("adjective")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "text--primary" }, [
-          _vm._v(
-            "\n            relating to or dependent on charity; charitable."
-          ),
-          _c("br"),
-          _vm._v(
-            '\n            "an eleemosynary educational institution."\n        '
-          ),
-        ]),
-      ]),
-      _vm._v(" "),
       _c(
-        "v-card-actions",
+        "v-card",
+        { staticClass: "mx-auto", attrs: { "max-width": "344" } },
         [
+          _c("v-card-text", [
+            _vm._v("\n            " + _vm._s(_vm.welcome) + "\n            "),
+            _c("div", [_vm._v("Word of the Day")]),
+            _vm._v(" "),
+            _c("p", { staticClass: "text-h4 text--primary" }, [
+              _vm._v("\n                el·ee·mos·y·nar·y\n            "),
+            ]),
+            _vm._v(" "),
+            _c("p", [_vm._v("adjective")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "text--primary" }, [
+              _vm._v(
+                "\n                relating to or dependent on charity; charitable."
+              ),
+              _c("br"),
+              _vm._v(
+                '\n                "an eleemosynary educational institution."\n            '
+              ),
+            ]),
+          ]),
+          _vm._v(" "),
           _c(
-            "v-btn",
-            {
-              attrs: { text: "", color: "teal accent-4" },
-              on: {
-                click: function ($event) {
-                  _vm.reveal = true
-                },
-              },
-            },
-            [_vm._v("\n            Learn More\n        ")]
-          ),
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-expand-transition",
-        [
-          _vm.reveal
-            ? _c(
-                "v-card",
+            "v-card-actions",
+            [
+              _c(
+                "v-btn",
                 {
-                  staticClass: "transition-fast-in-fast-out v-card--reveal",
-                  staticStyle: { height: "100%" },
+                  attrs: { text: "", color: "teal accent-4" },
+                  on: {
+                    click: function ($event) {
+                      _vm.reveal = true
+                    },
+                  },
                 },
-                [
-                  _c("v-card-text", { staticClass: "pb-0" }, [
-                    _c("p", { staticClass: "text-h4 text--primary" }, [
-                      _vm._v("\n                Origin\n            "),
-                    ]),
-                    _vm._v(" "),
-                    _c("p", [
-                      _vm._v(
-                        "late 16th century (as a noun denoting a place where alms were distributed): from medieval Latin eleemosynarius, from late Latin eleemosyna ‘alms’, from Greek eleēmosunē ‘compassion’ "
-                      ),
-                    ]),
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "v-card-actions",
-                    { staticClass: "pt-0" },
+                [_vm._v("\n                Learn More\n            ")]
+              ),
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-expand-transition",
+            [
+              _vm.reveal
+                ? _c(
+                    "v-card",
+                    {
+                      staticClass: "transition-fast-in-fast-out v-card--reveal",
+                      staticStyle: { height: "100%" },
+                    },
                     [
-                      _c(
-                        "v-btn",
-                        {
-                          attrs: { text: "", color: "teal accent-4" },
-                          on: {
-                            click: function ($event) {
-                              _vm.reveal = false
-                            },
-                          },
-                        },
-                        [
+                      _c("v-card-text", { staticClass: "pb-0" }, [
+                        _c("p", { staticClass: "text-h4 text--primary" }, [
                           _vm._v(
-                            "\n                    Close\n                "
+                            "\n                    Origin\n                "
                           ),
-                        ]
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _vm._v(
+                            "late 16th century (as a noun denoting a place where alms were distributed): from medieval Latin eleemosynarius, from late Latin eleemosyna ‘alms’, from Greek eleēmosunē ‘compassion’ "
+                          ),
+                        ]),
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "v-card-actions",
+                        { staticClass: "pt-0" },
+                        [
+                          _c(
+                            "v-btn",
+                            {
+                              attrs: { text: "", color: "teal accent-4" },
+                              on: {
+                                click: function ($event) {
+                                  _vm.reveal = false
+                                },
+                              },
+                            },
+                            [
+                              _vm._v(
+                                "\n                        Close\n                    "
+                              ),
+                            ]
+                          ),
+                        ],
+                        1
                       ),
                     ],
                     1
-                  ),
-                ],
-                1
-              )
-            : _vm._e(),
+                  )
+                : _vm._e(),
+            ],
+            1
+          ),
         ],
         1
       ),
