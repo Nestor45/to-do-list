@@ -23,3 +23,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
 });
+
+Route::post('task/create', 'TaskController@create');
+Route::get('tasks', 'TaskController@getTaskStatus');
+Route::post('task/delete', 'TaskController@destroyStatus');
+Route::post('task/edit','TaskController@editTask');

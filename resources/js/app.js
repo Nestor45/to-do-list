@@ -12,7 +12,7 @@ import 'vuetify/dist/vuetify.min.css';
 import {routes} from './routes'
 import StoreData from './stores'
 import MainApp from './components/MainApp.vue'
-// import {initialize} from './'
+import {initialize} from './helpers/general';
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
@@ -25,6 +25,7 @@ const router = new VueRouter({
     routes,
     mode: 'history'
 })
+initialize(store, router);
 
 // window.Vue = require('vue').default;
 
