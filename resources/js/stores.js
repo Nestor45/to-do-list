@@ -6,6 +6,7 @@ export default {
         isLoggerIn: !!user,
         loading: false,
         auth_error: null,
+        tasks:[],
         welcomeMessage: 'Welcome to my vue app'
     },
     getters: {
@@ -24,6 +25,7 @@ export default {
         auth_error(state){
             return state.auth_error
         },
+        
     },
     mutations: {
         login(state){

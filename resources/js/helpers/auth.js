@@ -8,7 +8,7 @@ export function login(credentials) {
                 res(response.data)
             })
             .catch((err)=> {
-                rej("Wrong email or password")
+                rej("Correo electronico o contraseña erroneos")
             })
     })
 }

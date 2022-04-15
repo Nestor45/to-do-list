@@ -19,7 +19,7 @@ Vue.use(Vuex);
 Vue.use(Vuetify)
 
 const store = new Vuex.Store(StoreData)
-const vuetify = new Vuetify
+const vuetify = new Vuetify()
 
 const router = new VueRouter({
     routes,
