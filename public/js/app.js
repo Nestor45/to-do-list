@@ -6926,6 +6926,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'registrar',
   data: function data() {
@@ -6944,12 +6972,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       bandTask: false,
       there_is_task: false,
       tasks: [],
-      editedIndex: -1,
+      editedTask: false,
       task: {
         title: '',
         description: '',
         status: 'pendiente',
         user_id: ''
+      },
+      editedItem: {
+        title: '',
+        description: '',
+        status: 'pendiente',
+        id_user: '',
+        id_task: ''
       },
       titleRules: [function (v) {
         return !!v || 'El titulo es requerido';
@@ -6986,7 +7021,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.pendingToDo();
   },
   methods: {
-    finished: function finished(item) {
+    editItem: function editItem(item) {
+      this.editedTask = true;
+      this.editedItem.title = item.title;
+      this.editedItem.description = item.description;
+      this.editedItem.id_task = item.id_task;
+      this.editedItem.id_user = item.id_user;
+      console.log(item);
+    },
+    save: function save() {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
@@ -6995,15 +7038,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.prev = 0;
-
-                if (!confirm('Realmente Desea Terminar esta Tarea')) {
-                  _context.next = 6;
-                  break;
-                }
-
+                console.log(_this.editedItem);
+                _context.prev = 1;
                 _context.next = 4;
-                return axios.post('/api/task/update', item);
+                return axios.post('/api/task/edit', _this.editedItem);
 
               case 4:
                 response = _context.sent;
@@ -7012,28 +7050,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   console.log(response);
 
                   _this.pendingToDo();
+
+                  _this.editedTask = false;
                 } else {
-                  alert("algo esta mal al Actualizar");
+                  alert("algo esta mal al Editar el registro");
                 }
 
-              case 6:
                 _context.next = 11;
                 break;
 
               case 8:
                 _context.prev = 8;
-                _context.t0 = _context["catch"](0);
-                console.log("finished", _context.t0);
+                _context.t0 = _context["catch"](1);
+                alert("algo esta mal al Editar");
 
               case 11:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 8]]);
+        }, _callee, null, [[1, 8]]);
       }))();
     },
-    deleteItem: function deleteItem(item) {
+    finished: function finished(item) {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
@@ -7042,44 +7081,45 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this2.dialogDelete = true;
-                _context2.prev = 1;
+                _context2.prev = 0;
 
-                if (!confirm('Realmente Desea Eliminar esta Tarea')) {
-                  _context2.next = 7;
+                if (!confirm('Realmente Desea Terminar esta Tarea')) {
+                  _context2.next = 6;
                   break;
                 }
 
-                _context2.next = 5;
-                return axios.post('/api/task/delete', item);
+                _context2.next = 4;
+                return axios.post('/api/task/update', item);
 
-              case 5:
+              case 4:
                 response = _context2.sent;
 
                 if (response.status === 200) {
+                  console.log(response);
+
                   _this2.pendingToDo();
                 } else {
-                  alert("algo esta mal al Eliminar");
+                  alert("algo esta mal al Actualizar");
                 }
 
-              case 7:
-                _context2.next = 12;
+              case 6:
+                _context2.next = 11;
                 break;
 
-              case 9:
-                _context2.prev = 9;
-                _context2.t0 = _context2["catch"](1);
-                console.log("deleteItem", _context2.t0);
+              case 8:
+                _context2.prev = 8;
+                _context2.t0 = _context2["catch"](0);
+                console.log("finished", _context2.t0);
 
-              case 12:
+              case 11:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[1, 9]]);
+        }, _callee2, null, [[0, 8]]);
       }))();
     },
-    toDoFinished: function toDoFinished() {
+    deleteItem: function deleteItem(item) {
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
@@ -7088,40 +7128,44 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.prev = 0;
-                _context3.next = 3;
-                return axios.post('/api/tasks/ter', _this3.task);
+                _this3.dialogDelete = true;
+                _context3.prev = 1;
 
-              case 3:
-                response = _context3.sent;
-
-                if (response.data.message === "No hay nada en la BD") {
-                  _this3.there_is_task = false;
-                  console.log("no hay preguntas");
-                } else {
-                  _this3.there_is_task = true;
-                  _this3.tasks = response.data.tasks;
-
-                  _this3.$store.commit('setTasks', _this3.tasks);
+                if (!confirm('Realmente Desea Eliminar esta Tarea')) {
+                  _context3.next = 7;
+                  break;
                 }
 
-                _context3.next = 10;
-                break;
+                _context3.next = 5;
+                return axios.post('/api/task/delete', item);
+
+              case 5:
+                response = _context3.sent;
+
+                if (response.status === 200) {
+                  _this3.pendingToDo();
+                } else {
+                  alert("algo esta mal al Eliminar");
+                }
 
               case 7:
-                _context3.prev = 7;
-                _context3.t0 = _context3["catch"](0);
-                console.log("pendingToDo", _context3.t0);
+                _context3.next = 12;
+                break;
 
-              case 10:
+              case 9:
+                _context3.prev = 9;
+                _context3.t0 = _context3["catch"](1);
+                console.log("deleteItem", _context3.t0);
+
+              case 12:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, null, [[0, 7]]);
+        }, _callee3, null, [[1, 9]]);
       }))();
     },
-    pendingToDo: function pendingToDo() {
+    toDoFinished: function toDoFinished() {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
@@ -7130,12 +7174,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                console.log("Btn pedientes");
-                _context4.prev = 1;
-                _context4.next = 4;
-                return axios.post('/api/tasks', _this4.task);
+                _context4.prev = 0;
+                _context4.next = 3;
+                return axios.post('/api/tasks/ter', _this4.task);
 
-              case 4:
+              case 3:
                 response = _context4.sent;
 
                 if (response.data.message === "No hay nada en la BD") {
@@ -7148,31 +7191,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this4.$store.commit('setTasks', _this4.tasks);
                 }
 
-                _context4.next = 11;
+                _context4.next = 10;
                 break;
 
-              case 8:
-                _context4.prev = 8;
-                _context4.t0 = _context4["catch"](1);
+              case 7:
+                _context4.prev = 7;
+                _context4.t0 = _context4["catch"](0);
                 console.log("pendingToDo", _context4.t0);
 
-              case 11:
+              case 10:
               case "end":
                 return _context4.stop();
             }
           }
-        }, _callee4, null, [[1, 8]]);
+        }, _callee4, null, [[0, 7]]);
       }))();
     },
-    volverPrincipal: function volverPrincipal() {
-      console.log("Btn volver");
-      this.dialogTask = false;
-    },
-    infoUser: function infoUser() {
-      var $user = this.$store.getters.currentUser;
-      this.task.user_id = $user.id;
-    },
-    nuevoTask: function nuevoTask() {
+    pendingToDo: function pendingToDo() {
       var _this5 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
@@ -7181,39 +7216,91 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                _this5.bandTask = true;
-                console.log("TASK:", _this5.task);
-                _context5.prev = 2;
-                _context5.next = 5;
-                return axios.post('/api/task/create', _this5.task);
+                console.log("Btn pedientes");
+                _context5.prev = 1;
+                _context5.next = 4;
+                return axios.post('/api/tasks', _this5.task);
 
-              case 5:
+              case 4:
                 response = _context5.sent;
 
-                if (response.status === 200) {
-                  console.log(response);
-
-                  _this5.pendingToDo();
-
-                  _this5.dialogTask = false;
+                if (response.data.message === "No hay nada en la BD") {
+                  _this5.there_is_task = false;
+                  console.log("no hay preguntas");
                 } else {
-                  alert("algo esta mal al registrar");
+                  _this5.there_is_task = true;
+                  _this5.tasks = response.data.tasks;
+
+                  _this5.$store.commit('setTasks', _this5.tasks);
                 }
 
-                _context5.next = 12;
+                _context5.next = 11;
                 break;
 
-              case 9:
-                _context5.prev = 9;
-                _context5.t0 = _context5["catch"](2);
-                alert("algo esta mal al registrar");
+              case 8:
+                _context5.prev = 8;
+                _context5.t0 = _context5["catch"](1);
+                console.log("pendingToDo", _context5.t0);
 
-              case 12:
+              case 11:
               case "end":
                 return _context5.stop();
             }
           }
-        }, _callee5, null, [[2, 9]]);
+        }, _callee5, null, [[1, 8]]);
+      }))();
+    },
+    volverPrincipal: function volverPrincipal() {
+      console.log("Btn volver");
+      this.dialogTask = false;
+      this.editedTask = false;
+    },
+    infoUser: function infoUser() {
+      var $user = this.$store.getters.currentUser;
+      this.task.user_id = $user.id;
+    },
+    nuevoTask: function nuevoTask() {
+      var _this6 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _this6.bandTask = true;
+                console.log("TASK:", _this6.task);
+                _context6.prev = 2;
+                _context6.next = 5;
+                return axios.post('/api/task/create', _this6.task);
+
+              case 5:
+                response = _context6.sent;
+
+                if (response.status === 200) {
+                  console.log(response);
+
+                  _this6.pendingToDo();
+
+                  _this6.dialogTask = false;
+                } else {
+                  alert("algo esta mal al registrar");
+                }
+
+                _context6.next = 12;
+                break;
+
+              case 9:
+                _context6.prev = 9;
+                _context6.t0 = _context6["catch"](2);
+                alert("algo esta mal al registrar");
+
+              case 12:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, null, [[2, 9]]);
       }))();
     }
   }
@@ -32501,8 +32588,180 @@ var render = function () {
                       ],
                       1
                     ),
+                    _vm._v(" "),
+                    _vm.editedTask
+                      ? [
+                          _c(
+                            "v-dialog",
+                            {
+                              model: {
+                                value: _vm.editedTask,
+                                callback: function ($$v) {
+                                  _vm.editedTask = $$v
+                                },
+                                expression: "editedTask",
+                              },
+                            },
+                            [
+                              _c(
+                                "v-card",
+                                [
+                                  _c("v-card-title", [
+                                    _c(
+                                      "span",
+                                      { staticClass: "headline text-center" },
+                                      [_vm._v("Editar Imputado Fisico")]
+                                    ),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-card-text",
+                                    [
+                                      _c(
+                                        "v-container",
+                                        [
+                                          _c(
+                                            "v-row",
+                                            [
+                                              _c(
+                                                "v-form",
+                                                {
+                                                  ref: "formTask",
+                                                  staticClass: "col-12",
+                                                },
+                                                [
+                                                  _c(
+                                                    "v-col",
+                                                    { attrs: { cols: "12" } },
+                                                    [
+                                                      _c("v-text-field", {
+                                                        attrs: {
+                                                          rules: _vm.titleRules,
+                                                          label: "Titutlo:",
+                                                          required: "",
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.editedItem
+                                                              .title,
+                                                          callback: function (
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.editedItem,
+                                                              "title",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "editedItem.title",
+                                                        },
+                                                      }),
+                                                    ],
+                                                    1
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "v-col",
+                                                    { attrs: { cols: "12" } },
+                                                    [
+                                                      _c("v-text-field", {
+                                                        attrs: {
+                                                          rules:
+                                                            _vm.descriptionRules,
+                                                          label: "Descripcion:",
+                                                          required: "",
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.editedItem
+                                                              .description,
+                                                          callback: function (
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.editedItem,
+                                                              "description",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "editedItem.description",
+                                                        },
+                                                      }),
+                                                    ],
+                                                    1
+                                                  ),
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-card-actions",
+                                                { staticClass: "mt-10" },
+                                                [
+                                                  _c("v-spacer"),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "div",
+                                                    {
+                                                      staticClass:
+                                                        "text-center",
+                                                    },
+                                                    [
+                                                      _c(
+                                                        "v-btn",
+                                                        {
+                                                          attrs: {
+                                                            color: "red",
+                                                            text: "",
+                                                          },
+                                                          on: {
+                                                            click:
+                                                              _vm.volverPrincipal,
+                                                          },
+                                                        },
+                                                        [_vm._v("Cancelar")]
+                                                      ),
+                                                      _vm._v(" "),
+                                                      _c(
+                                                        "v-btn",
+                                                        {
+                                                          attrs: {
+                                                            color: "green",
+                                                            text: "",
+                                                          },
+                                                          on: {
+                                                            click: _vm.save,
+                                                          },
+                                                        },
+                                                        [_vm._v("Editar Tarea")]
+                                                      ),
+                                                    ],
+                                                    1
+                                                  ),
+                                                ],
+                                                1
+                                              ),
+                                            ],
+                                            1
+                                          ),
+                                        ],
+                                        1
+                                      ),
+                                    ],
+                                    1
+                                  ),
+                                ],
+                                1
+                              ),
+                            ],
+                            1
+                          ),
+                        ]
+                      : _vm._e(),
                   ],
-                  1
+                  2
                 ),
               ]),
             ],

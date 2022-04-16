@@ -144,14 +144,13 @@ class TaskController extends Controller
     {
         $exito = false;
         DB::beginTransaction();
-        
         try {
             $task = Task::find($request->id_task);
             $task->title = $request->title;
             $task->description = $request->description;
             $task->status = $request->status;
             $task->url = $request->url;
-            $task->user_id = $request->user_id;
+            $task->user_id = $request->id_user;
             
             $task->save();
             DB::commit();

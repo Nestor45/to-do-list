@@ -95,11 +95,39 @@
                                     :length="pageCount"
                                 ></v-pagination>
                             </div>
+                            <template v-if="editedTask">
+                                <v-dialog v-model="editedTask">
+                                    <v-card>
+                                        <v-card-title>
+                                            <span class="headline text-center">Editar Imputado Fisico</span>
+                                        </v-card-title>
+                                        <v-card-text>
+                                        <v-container>
+                                            <v-row>
+                                                <v-form class="col-12" ref="formTask">
+                                                    <v-col cols="12">
+                                                        <v-text-field v-model="editedItem.title" :rules="titleRules" label="Titutlo:" required></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12">
+                                                        <v-text-field v-model="editedItem.description" :rules="descriptionRules" label="Descripcion:" required></v-text-field>
+                                                    </v-col>
+                                                </v-form>
+                                                <v-card-actions class="mt-10">
+                                                    <v-spacer></v-spacer>
+                                                    <div class="text-center">
+                                                        <v-btn color="red" text @click="volverPrincipal">Cancelar</v-btn>
+                                                        <v-btn color="green" text @click="save">Editar Tarea</v-btn>
+                                                    </div>
+                                                </v-card-actions>
+                                            </v-row>
+                                        </v-container>
+                                    </v-card-text>
+                                    </v-card>
+                                </v-dialog>
+                            </template>
                         </div>
                     </div>
                 </v-card>
-                
-                
             </div>
         </div>
     </div>
@@ -124,12 +152,19 @@ export default {
             bandTask: false,
             there_is_task: false,
             tasks: [],
-            editedIndex: -1,
+            editedTask: false,
             task: {
                 title: '',
                 description:'',
                 status:'pendiente',
                 user_id:'',
+            },
+            editedItem: {
+                title: '',
+                description:'',
+                status:'pendiente',
+                id_user:'',
+                id_task: ''
             },
             titleRules: [
                 v => !!v || 'El titulo es requerido',
@@ -166,7 +201,31 @@ export default {
         this.pendingToDo()
     },
     methods: {
-        async finished(item){
+        editItem(item) {
+            this.editedTask = true
+            this.editedItem.title = item.title
+            this.editedItem.description = item.description
+            this.editedItem.id_task = item.id_task
+            this.editedItem.id_user = item.id_user
+            console.log(item)
+            
+        },
+        async save(){
+            console.log(this.editedItem)
+            try {
+                let response = await axios.post('/api/task/edit', this.editedItem)
+                if (response.status === 200) {
+                    console.log(response)
+                    this.pendingToDo()
+                    this.editedTask = false
+                } else {
+                    alert("algo esta mal al Editar el registro")
+                }
+            } catch (error) {
+                alert("algo esta mal al Editar")
+            }
+        },
+        async finished(item) {
             try {
                 if (confirm('Realmente Desea Terminar esta Tarea')){
                     let response = await axios.post('/api/task/update',item)
@@ -230,6 +289,7 @@ export default {
         volverPrincipal() {
             console.log("Btn volver")
             this.dialogTask = false
+            this.editedTask = false
         },
         infoUser(){
             let $user = this.$store.getters.currentUser
@@ -250,7 +310,7 @@ export default {
             } catch (error) {
                 alert("algo esta mal al registrar")
             }
-        }
+        },
     }
 }
 </script>
