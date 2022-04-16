@@ -6882,18 +6882,69 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'registrar',
   data: function data() {
     return {
+      page: 1,
+      pageCount: 1,
+      itemsPerPage: 4,
       dialog: false,
       dialogDelete: false,
+      "delete": false,
       loader: null,
       loading: false,
       loading1: false,
       loading2: false,
       dialogTask: false,
       bandTask: false,
+      there_is_task: false,
+      tasks: [],
+      editedIndex: -1,
       task: {
         title: '',
         description: '',
@@ -6905,19 +6956,213 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }],
       descriptionRules: [function (v) {
         return !!v || 'La descripción es requerida';
+      }],
+      encabezadoTasks: [{
+        text: 'Titulo',
+        value: 'title'
+      }, {
+        text: 'Descripcion',
+        value: 'description'
+      }, {
+        text: 'Creado',
+        value: 'created_at'
+      }, {
+        text: 'Actulizado',
+        value: 'updated_at'
+      }, {
+        text: 'Acciones',
+        value: 'actions',
+        sortable: false
       }]
     };
   },
-  computed: {},
+  computed: {
+    tasksInfoPend: function tasksInfoPend() {
+      return this.$store.getters.getTasks;
+    }
+  },
   created: function created() {
     this.infoUser();
+    this.pendingToDo();
   },
   methods: {
-    finished: function finished() {
-      console.log("Btn terminados");
+    finished: function finished(item) {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+
+                if (!confirm('Realmente Desea Terminar esta Tarea')) {
+                  _context.next = 6;
+                  break;
+                }
+
+                _context.next = 4;
+                return axios.post('/api/task/update', item);
+
+              case 4:
+                response = _context.sent;
+
+                if (response.status === 200) {
+                  console.log(response);
+
+                  _this.pendingToDo();
+                } else {
+                  alert("algo esta mal al Actualizar");
+                }
+
+              case 6:
+                _context.next = 11;
+                break;
+
+              case 8:
+                _context.prev = 8;
+                _context.t0 = _context["catch"](0);
+                console.log("finished", _context.t0);
+
+              case 11:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 8]]);
+      }))();
+    },
+    deleteItem: function deleteItem(item) {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _this2.dialogDelete = true;
+                _context2.prev = 1;
+
+                if (!confirm('Realmente Desea Eliminar esta Tarea')) {
+                  _context2.next = 7;
+                  break;
+                }
+
+                _context2.next = 5;
+                return axios.post('/api/task/delete', item);
+
+              case 5:
+                response = _context2.sent;
+
+                if (response.status === 200) {
+                  _this2.pendingToDo();
+                } else {
+                  alert("algo esta mal al Eliminar");
+                }
+
+              case 7:
+                _context2.next = 12;
+                break;
+
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](1);
+                console.log("deleteItem", _context2.t0);
+
+              case 12:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[1, 9]]);
+      }))();
+    },
+    toDoFinished: function toDoFinished() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return axios.post('/api/tasks/ter', _this3.task);
+
+              case 3:
+                response = _context3.sent;
+
+                if (response.data.message === "No hay nada en la BD") {
+                  _this3.there_is_task = false;
+                  console.log("no hay preguntas");
+                } else {
+                  _this3.there_is_task = true;
+                  _this3.tasks = response.data.tasks;
+
+                  _this3.$store.commit('setTasks', _this3.tasks);
+                }
+
+                _context3.next = 10;
+                break;
+
+              case 7:
+                _context3.prev = 7;
+                _context3.t0 = _context3["catch"](0);
+                console.log("pendingToDo", _context3.t0);
+
+              case 10:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[0, 7]]);
+      }))();
     },
     pendingToDo: function pendingToDo() {
-      console.log("Btn pedientes");
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                console.log("Btn pedientes");
+                _context4.prev = 1;
+                _context4.next = 4;
+                return axios.post('/api/tasks', _this4.task);
+
+              case 4:
+                response = _context4.sent;
+
+                if (response.data.message === "No hay nada en la BD") {
+                  _this4.there_is_task = false;
+                  console.log("no hay preguntas");
+                } else {
+                  _this4.there_is_task = true;
+                  _this4.tasks = response.data.tasks;
+
+                  _this4.$store.commit('setTasks', _this4.tasks);
+                }
+
+                _context4.next = 11;
+                break;
+
+              case 8:
+                _context4.prev = 8;
+                _context4.t0 = _context4["catch"](1);
+                console.log("pendingToDo", _context4.t0);
+
+              case 11:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, null, [[1, 8]]);
+      }))();
     },
     volverPrincipal: function volverPrincipal() {
       console.log("Btn volver");
@@ -6928,48 +7173,48 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.task.user_id = $user.id;
     },
     nuevoTask: function nuevoTask() {
-      var _this = this;
+      var _this5 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
         var response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _this.bandTask = true;
-                console.log("TASK:", _this.task);
-                _context.prev = 2;
-                _context.next = 5;
-                return axios.post('/api/task/create', _this.task);
+                _this5.bandTask = true;
+                console.log("TASK:", _this5.task);
+                _context5.prev = 2;
+                _context5.next = 5;
+                return axios.post('/api/task/create', _this5.task);
 
               case 5:
-                response = _context.sent;
+                response = _context5.sent;
 
                 if (response.status === 200) {
                   console.log(response);
-                  _this.dialogTask = false;
+
+                  _this5.pendingToDo();
+
+                  _this5.dialogTask = false;
                 } else {
                   alert("algo esta mal al registrar");
                 }
 
-                _context.next = 12;
+                _context5.next = 12;
                 break;
 
               case 9:
-                _context.prev = 9;
-                _context.t0 = _context["catch"](2);
+                _context5.prev = 9;
+                _context5.t0 = _context5["catch"](2);
                 alert("algo esta mal al registrar");
 
               case 12:
               case "end":
-                return _context.stop();
+                return _context5.stop();
             }
           }
-        }, _callee, null, [[2, 9]]);
+        }, _callee5, null, [[2, 9]]);
       }))();
-    },
-    limpiarTask: function limpiarTask() {
-      this.task.title = null, this.task.description = null;
     }
   }
 });
@@ -7229,6 +7474,9 @@ var user = (0,_helpers_auth__WEBPACK_IMPORTED_MODULE_0__.getLocalUser)();
     },
     auth_error: function auth_error(state) {
       return state.auth_error;
+    },
+    getTasks: function getTasks(state) {
+      return state.tasks;
     }
   },
   mutations: {
@@ -7253,6 +7501,9 @@ var user = (0,_helpers_auth__WEBPACK_IMPORTED_MODULE_0__.getLocalUser)();
       localStorage.removeItem("user");
       state.isLoggerIn = false;
       state.currentUser = null;
+    },
+    setTasks: function setTasks(state, payload) {
+      state.tasks = payload;
     }
   },
   actions: {
@@ -31912,7 +32163,7 @@ var render = function () {
                     {
                       staticClass: "ma-2",
                       attrs: { loading: _vm.loading1, disabled: _vm.loading1 },
-                      on: { click: _vm.finished },
+                      on: { click: _vm.toDoFinished },
                       scopedSlots: _vm._u([
                         {
                           key: "loader",
@@ -32136,6 +32387,124 @@ var render = function () {
                 ],
                 1
               ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-12" }, [
+                _c("div", { staticClass: "text-left mt-2" }, [
+                  _c(
+                    "p",
+                    { staticClass: "text-h4 text--primary text-center" },
+                    [_vm._v("TAREAS")]
+                  ),
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "mt-4 col-md-12" },
+                  [
+                    _c("v-data-table", {
+                      attrs: {
+                        headers: _vm.encabezadoTasks,
+                        items: _vm.tasksInfoPend,
+                        "items-per-page": _vm.itemsPerPage,
+                        "no-data-text": "No se encontraron Datos",
+                        "hide-default-footer": "",
+                        page: _vm.page,
+                      },
+                      on: {
+                        "page-count": function ($event) {
+                          _vm.pageCount = $event
+                        },
+                        "update:page": function ($event) {
+                          _vm.page = $event
+                        },
+                      },
+                      scopedSlots: _vm._u(
+                        [
+                          {
+                            key: "item.actions",
+                            fn: function (ref) {
+                              var item = ref.item
+                              return [
+                                _c(
+                                  "v-icon",
+                                  {
+                                    attrs: { small: "", color: "0D3E67" },
+                                    on: {
+                                      click: function ($event) {
+                                        return _vm.editItem(item)
+                                      },
+                                    },
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                mdi-pencil\n                            "
+                                    ),
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-icon",
+                                  {
+                                    attrs: { small: "", color: "#BC2222" },
+                                    on: {
+                                      click: function ($event) {
+                                        return _vm.deleteItem(item)
+                                      },
+                                    },
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                mdi-delete\n                            "
+                                    ),
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-icon",
+                                  {
+                                    attrs: { small: "", color: "#0D3E67" },
+                                    on: {
+                                      click: function ($event) {
+                                        return _vm.finished(item)
+                                      },
+                                    },
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                mdi-checkbox-marked-circle-outline\n                            "
+                                    ),
+                                  ]
+                                ),
+                              ]
+                            },
+                          },
+                        ],
+                        null,
+                        true
+                      ),
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "text-center pt-2" },
+                      [
+                        _c("v-pagination", {
+                          attrs: { length: _vm.pageCount },
+                          model: {
+                            value: _vm.page,
+                            callback: function ($$v) {
+                              _vm.page = $$v
+                            },
+                            expression: "page",
+                          },
+                        }),
+                      ],
+                      1
+                    ),
+                  ],
+                  1
+                ),
+              ]),
             ],
             1
           ),

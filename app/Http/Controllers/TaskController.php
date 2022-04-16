@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 use App\Models\User;
 use App\Models\Task;
@@ -26,7 +27,6 @@ class TaskController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getTaskStatus(Request $request) {
-
         $tasks = Task::where('status', $request->status)->get(); //obtenemos las tareas por estado
         $array = array(); //Creamos un areglo para almacenar las tareas y devolverlas
         
@@ -41,6 +41,45 @@ class TaskController extends Controller
             $objectTask->url = $task->url;
             $objectTask->user_name = $user->name;
             $objectTask->id_user = $user->id;
+            setlocale(LC_ALL, 'es_ES');
+            $date = Carbon::parse($task->created_at);
+            $objectTask->created_at = $date->formatLocalized('%d %B %Y'); ;
+            $date2 = Carbon::parse($task->created_at);
+            $objectTask->updated_at = $date2->formatLocalized('%d %b %Y');;
+            array_push($array, $objectTask);
+        }
+        if ($array) {
+            return response()->json([
+                "tasks" => $array
+            ], 200);
+        } else {
+            return response()->json([
+                "status" => "error",
+                "message" => "No hay nada en la BD"
+            ], 250);
+        }
+    }
+
+    public function getTaskStatusTer(Request $request) {
+        $tasks = Task::where('status', 'terminado')->get(); //obtenemos las tareas por estado
+        $array = array(); //Creamos un areglo para almacenar las tareas y devolverlas
+        
+        foreach($tasks as $task) {
+            $user = User::whereId($task->user_id)->first(); // obtenemos el usuario al que fue asignado la tarea (por si las dudas)
+            
+            $objectTask = new \stdClass();
+            $objectTask->id_task = $task->id;
+            $objectTask->title = $task->title;
+            $objectTask->description = $task->description;
+            $objectTask->status = $task->status;
+            $objectTask->url = $task->url;
+            $objectTask->user_name = $user->name;
+            $objectTask->id_user = $user->id;
+            setlocale(LC_ALL, 'es_ES');
+            $date = Carbon::parse($task->created_at);
+            $objectTask->created_at = $date->formatLocalized('%d %B %Y'); ;
+            $date2 = Carbon::parse($task->created_at);
+            $objectTask->updated_at = $date2->formatLocalized('%d %b %Y');;
             array_push($array, $objectTask);
         }
         if ($array) {
@@ -200,6 +239,41 @@ class TaskController extends Controller
             return response()->json([
                 "status" => "ok",
                 "message" => "Tarea eliminada correctamente",
+                "question" => $task
+            ], 200);
+        }
+    }
+
+    /**
+     * Change the specified state of storage. Funcion que nos permite colocar en TERMINADO en lugar de borrar el regitro
+     * @return \Illuminate\Http\Response
+     */
+    public function updateStatus(Request $request) {
+
+        $exito = false;
+        DB::beginTransaction();
+
+        try {
+            $task = Task::find($request->id_task); //find -> Solo nos retorna un null
+            $task->status = 'terminado';
+            $task->save();
+
+            DB::commit();
+            $exito = true;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $exito = false;
+            return response()->json([
+                "status" => "error",
+                "message" => "Error al actualizar los datos",
+                "error" => $th
+            ], 500);
+        }
+
+        if ($exito) {
+            return response()->json([
+                "status" => "ok",
+                "message" => "Tarea Actualizada correctamente",
                 "question" => $task
             ], 200);
         }

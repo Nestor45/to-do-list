@@ -25,7 +25,10 @@ export default {
         auth_error(state){
             return state.auth_error
         },
-        
+        getTasks(state) {
+            return state.tasks
+        },
+
     },
     mutations: {
         login(state){
@@ -48,6 +51,9 @@ export default {
             state.isLoggerIn = false
             state.currentUser = null
         },
+        setTasks(state,payload) {
+            state.tasks = payload
+        }
     },
     actions: {
         login(context){
