@@ -6608,40 +6608,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'home',
   data: function data() {
-    return {
-      reveal: false
-    };
+    return {};
   },
   computed: {
     welcome: function welcome() {
       return this.$store.getters.welcome;
+    }
+  },
+  methods: {
+    reveal: function reveal() {
+      this.$router.push('/registrar');
     }
   }
 });
@@ -6953,21 +6932,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'registrar',
   data: function data() {
     return {
+      colorBand: false,
       page: 1,
       pageCount: 1,
       itemsPerPage: 4,
       dialog: false,
       dialogDelete: false,
       "delete": false,
-      loader: null,
-      loading: false,
-      loading1: false,
-      loading2: false,
       dialogTask: false,
       bandTask: false,
       there_is_task: false,
@@ -7038,12 +7013,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                console.log(_this.editedItem);
-                _context.prev = 1;
-                _context.next = 4;
+                _context.prev = 0;
+                _context.next = 3;
                 return axios.post('/api/task/edit', _this.editedItem);
 
-              case 4:
+              case 3:
                 response = _context.sent;
 
                 if (response.status === 200) {
@@ -7056,20 +7030,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   alert("algo esta mal al Editar el registro");
                 }
 
-                _context.next = 11;
+                _context.next = 10;
                 break;
 
-              case 8:
-                _context.prev = 8;
-                _context.t0 = _context["catch"](1);
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](0);
                 alert("algo esta mal al Editar");
 
-              case 11:
+              case 10:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[1, 8]]);
+        }, _callee, null, [[0, 7]]);
       }))();
     },
     finished: function finished(item) {
@@ -7095,8 +7069,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 response = _context2.sent;
 
                 if (response.status === 200) {
-                  console.log(response);
-
                   _this2.pendingToDo();
                 } else {
                   alert("algo esta mal al Actualizar");
@@ -7174,11 +7146,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _context4.prev = 0;
-                _context4.next = 3;
+                _this4.colorBand = true;
+                _context4.prev = 1;
+                _context4.next = 4;
                 return axios.post('/api/tasks/ter', _this4.task);
 
-              case 3:
+              case 4:
                 response = _context4.sent;
 
                 if (response.data.message === "No hay nada en la BD") {
@@ -7191,20 +7164,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this4.$store.commit('setTasks', _this4.tasks);
                 }
 
-                _context4.next = 10;
+                _context4.next = 11;
                 break;
 
-              case 7:
-                _context4.prev = 7;
-                _context4.t0 = _context4["catch"](0);
+              case 8:
+                _context4.prev = 8;
+                _context4.t0 = _context4["catch"](1);
                 console.log("pendingToDo", _context4.t0);
 
-              case 10:
+              case 11:
               case "end":
                 return _context4.stop();
             }
           }
-        }, _callee4, null, [[0, 7]]);
+        }, _callee4, null, [[1, 8]]);
       }))();
     },
     pendingToDo: function pendingToDo() {
@@ -7216,12 +7189,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                console.log("Btn pedientes");
-                _context5.prev = 1;
-                _context5.next = 4;
+                console.log(_this5.colorBand);
+                _this5.colorBand = false;
+                _context5.prev = 2;
+                _context5.next = 5;
                 return axios.post('/api/tasks', _this5.task);
 
-              case 4:
+              case 5:
                 response = _context5.sent;
 
                 if (response.data.message === "No hay nada en la BD") {
@@ -7234,24 +7208,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this5.$store.commit('setTasks', _this5.tasks);
                 }
 
-                _context5.next = 11;
+                _context5.next = 12;
                 break;
 
-              case 8:
-                _context5.prev = 8;
-                _context5.t0 = _context5["catch"](1);
+              case 9:
+                _context5.prev = 9;
+                _context5.t0 = _context5["catch"](2);
                 console.log("pendingToDo", _context5.t0);
 
-              case 11:
+              case 12:
               case "end":
                 return _context5.stop();
             }
           }
-        }, _callee5, null, [[1, 8]]);
+        }, _callee5, null, [[2, 9]]);
       }))();
     },
     volverPrincipal: function volverPrincipal() {
-      console.log("Btn volver");
       this.dialogTask = false;
       this.editedTask = false;
     },
@@ -7269,17 +7242,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context6.prev = _context6.next) {
               case 0:
                 _this6.bandTask = true;
-                console.log("TASK:", _this6.task);
-                _context6.prev = 2;
-                _context6.next = 5;
+                _context6.prev = 1;
+                _context6.next = 4;
                 return axios.post('/api/task/create', _this6.task);
 
-              case 5:
+              case 4:
                 response = _context6.sent;
 
                 if (response.status === 200) {
-                  console.log(response);
-
                   _this6.pendingToDo();
 
                   _this6.dialogTask = false;
@@ -7287,20 +7257,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   alert("algo esta mal al registrar");
                 }
 
-                _context6.next = 12;
+                _context6.next = 11;
                 break;
 
-              case 9:
-                _context6.prev = 9;
-                _context6.t0 = _context6["catch"](2);
+              case 8:
+                _context6.prev = 8;
+                _context6.t0 = _context6["catch"](1);
                 alert("algo esta mal al registrar");
 
-              case 12:
+              case 11:
               case "end":
                 return _context6.stop();
             }
           }
-        }, _callee6, null, [[2, 9]]);
+        }, _callee6, null, [[1, 8]]);
       }))();
     }
   }
@@ -31946,70 +31916,10 @@ var render = function () {
                 "v-btn",
                 {
                   attrs: { text: "", color: "teal accent-4" },
-                  on: {
-                    click: function ($event) {
-                      _vm.reveal = true
-                    },
-                  },
+                  on: { click: _vm.reveal },
                 },
-                [_vm._v("\n                Learn More\n            ")]
+                [_vm._v("\n                Ir a Registrar\n            ")]
               ),
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "v-expand-transition",
-            [
-              _vm.reveal
-                ? _c(
-                    "v-card",
-                    {
-                      staticClass: "transition-fast-in-fast-out v-card--reveal",
-                      staticStyle: { height: "100%" },
-                    },
-                    [
-                      _c("v-card-text", { staticClass: "pb-0" }, [
-                        _c("p", { staticClass: "text-h4 text--primary" }, [
-                          _vm._v(
-                            "\n                    Origin\n                "
-                          ),
-                        ]),
-                        _vm._v(" "),
-                        _c("p", [
-                          _vm._v(
-                            "late 16th century (as a noun denoting a place where alms were distributed): from medieval Latin eleemosynarius, from late Latin eleemosyna ‘alms’, from Greek eleēmosunē ‘compassion’ "
-                          ),
-                        ]),
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "v-card-actions",
-                        { staticClass: "pt-0" },
-                        [
-                          _c(
-                            "v-btn",
-                            {
-                              attrs: { text: "", color: "teal accent-4" },
-                              on: {
-                                click: function ($event) {
-                                  _vm.reveal = false
-                                },
-                              },
-                            },
-                            [
-                              _vm._v(
-                                "\n                        Close\n                    "
-                              ),
-                            ]
-                          ),
-                        ],
-                        1
-                      ),
-                    ],
-                    1
-                  )
-                : _vm._e(),
             ],
             1
           ),
@@ -32231,11 +32141,7 @@ var render = function () {
                     "v-btn",
                     {
                       staticClass: "ma-2",
-                      attrs: {
-                        loading: _vm.loading,
-                        disabled: _vm.loading,
-                        color: "primary",
-                      },
+                      attrs: { color: _vm.colorBand ? "" : "primary" },
                       on: { click: _vm.pendingToDo },
                     },
                     [
@@ -32249,21 +32155,12 @@ var render = function () {
                     "v-btn",
                     {
                       staticClass: "ma-2",
-                      attrs: { loading: _vm.loading1, disabled: _vm.loading1 },
+                      attrs: { color: _vm.colorBand ? "primary" : "" },
                       on: { click: _vm.toDoFinished },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "loader",
-                          fn: function () {
-                            return [_c("span", [_vm._v("Cargando...")])]
-                          },
-                          proxy: true,
-                        },
-                      ]),
                     },
                     [
                       _vm._v(
-                        "\n                        Tareas Terminadas\n                        "
+                        "\n                        Tareas Terminadas\n                    "
                       ),
                     ]
                   ),

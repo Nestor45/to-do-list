@@ -4,12 +4,11 @@
             <div class="col-md-10">
                 <v-card class="mt-4">
                     <v-toolbar flat>
-                        <v-btn class="ma-2" :loading="loading" :disabled="loading" color="primary" @click="pendingToDo">
+                        <v-btn class="ma-2" :color="colorBand ? '' : 'primary'" @click="pendingToDo">
                             Tareas Pendientes
                         </v-btn>
-                        <v-btn class="ma-2"  :loading="loading1" :disabled="loading1" @click="toDoFinished">
+                        <v-btn class="ma-2" :color="colorBand ? 'primary' : ''"  @click="toDoFinished">
                             Tareas Terminadas
-                            <template v-slot:loader> <span>Cargando...</span> </template>
                         </v-btn>
                         <v-divider class="mx-2" inset vertical ></v-divider>
                         <v-spacer></v-spacer>
@@ -138,16 +137,13 @@ export default {
     name: 'registrar',
     data() {
         return {
+            colorBand: false,
             page: 1,
             pageCount: 1,
             itemsPerPage: 4,
             dialog: false,
             dialogDelete: false,
             delete: false,
-            loader: null,
-            loading: false,
-            loading1: false,
-            loading2: false,
             dialogTask: false,
             bandTask: false,
             there_is_task: false,
@@ -211,7 +207,6 @@ export default {
             
         },
         async save(){
-            console.log(this.editedItem)
             try {
                 let response = await axios.post('/api/task/edit', this.editedItem)
                 if (response.status === 200) {
@@ -230,7 +225,6 @@ export default {
                 if (confirm('Realmente Desea Terminar esta Tarea')){
                     let response = await axios.post('/api/task/update',item)
                     if (response.status === 200) {
-                        console.log(response)
                         this.pendingToDo()
                     } else {
                         alert("algo esta mal al Actualizar")
@@ -256,6 +250,7 @@ export default {
             }
         },
         async toDoFinished(){
+            this.colorBand = true
             try {
                 let response = await axios.post('/api/tasks/ter',this.task)
                 if (response.data.message === "No hay nada en la BD") {
@@ -271,7 +266,8 @@ export default {
             }
         },
         async pendingToDo() {
-            console.log("Btn pedientes")
+            console.log(this.colorBand)
+            this.colorBand = false
             try {
                 let response = await axios.post('/api/tasks',this.task)
                 if (response.data.message === "No hay nada en la BD") {
@@ -287,7 +283,6 @@ export default {
             }
         },
         volverPrincipal() {
-            console.log("Btn volver")
             this.dialogTask = false
             this.editedTask = false
         },
@@ -297,11 +292,9 @@ export default {
         },
         async nuevoTask() {
             this.bandTask = true
-            console.log("TASK:",this.task)
             try {
                 let response = await axios.post('/api/task/create', this.task)
                 if (response.status === 200) {
-                    console.log(response)
                     this.pendingToDo()
                     this.dialogTask = false
                 } else {
