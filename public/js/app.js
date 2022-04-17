@@ -7070,6 +7070,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 if (response.status === 200) {
                   _this2.pendingToDo();
+                } else if (response.status === 250) {
+                  alert("El dato ya ha fue actualizado");
                 } else {
                   alert("algo esta mal al Actualizar");
                 }

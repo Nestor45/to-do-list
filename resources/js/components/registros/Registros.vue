@@ -226,6 +226,8 @@ export default {
                     let response = await axios.post('/api/task/update',item)
                     if (response.status === 200) {
                         this.pendingToDo()
+                    }else if(response.status === 250){
+                        alert("El dato ya ha fue actualizado")
                     } else {
                         alert("algo esta mal al Actualizar")
                     }

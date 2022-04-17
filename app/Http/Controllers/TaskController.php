@@ -251,24 +251,33 @@ class TaskController extends Controller
 
         $exito = false;
         DB::beginTransaction();
-
-        try {
-            $task = Task::find($request->id_task); //find -> Solo nos retorna un null
-            $task->status = 'terminado';
-            $task->save();
-
-            DB::commit();
-            $exito = true;
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            $exito = false;
+        return response()->json([
+            "message" => "El dato ya esta terminado",
+            "error" => $request->all()
+        ], 250);
+        if ($request->status == 'terminado') {
             return response()->json([
-                "status" => "error",
-                "message" => "Error al actualizar los datos",
+                "message" => "El dato ya esta terminado",
                 "error" => $th
-            ], 500);
+            ], 250);
+        }else {
+            try {
+                $task = Task::find($request->id_task); //find -> Solo nos retorna un null
+                $task->status = 'terminado';
+                $task->save();
+    
+                DB::commit();
+                $exito = true;
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                $exito = false;
+                return response()->json([
+                    "status" => "error",
+                    "message" => "Error al actualizar los datos",
+                    "error" => $th
+                ], 500);
+            }
         }
-
         if ($exito) {
             return response()->json([
                 "status" => "ok",
