@@ -152,7 +152,7 @@ export default {
             task: {
                 title: '',
                 description:'',
-                status:'pendiente',
+                status:'',
                 user_id:'',
             },
             editedItem: {
@@ -253,8 +253,10 @@ export default {
         },
         async toDoFinished(){
             this.colorBand = true
+            this.task.status = 'terminado'
+            console.log(this.task)
             try {
-                let response = await axios.post('/api/tasks/ter',this.task)
+                let response = await axios.post('/api/tasks',this.task)
                 if (response.data.message === "No hay nada en la BD") {
                     this.there_is_task = false
                     console.log("no hay preguntas")
@@ -269,6 +271,8 @@ export default {
         },
         async pendingToDo() {
             console.log(this.colorBand)
+            this.task.status = 'pendiente'
+            console.log(this.task)
             this.colorBand = false
             try {
                 let response = await axios.post('/api/tasks',this.task)

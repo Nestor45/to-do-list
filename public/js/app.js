@@ -6951,7 +6951,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       task: {
         title: '',
         description: '',
-        status: 'pendiente',
+        status: '',
         user_id: ''
       },
       editedItem: {
@@ -7149,11 +7149,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context4.prev = _context4.next) {
               case 0:
                 _this4.colorBand = true;
-                _context4.prev = 1;
-                _context4.next = 4;
-                return axios.post('/api/tasks/ter', _this4.task);
+                _this4.task.status = 'terminado';
+                console.log(_this4.task);
+                _context4.prev = 3;
+                _context4.next = 6;
+                return axios.post('/api/tasks', _this4.task);
 
-              case 4:
+              case 6:
                 response = _context4.sent;
 
                 if (response.data.message === "No hay nada en la BD") {
@@ -7166,20 +7168,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this4.$store.commit('setTasks', _this4.tasks);
                 }
 
-                _context4.next = 11;
+                _context4.next = 13;
                 break;
 
-              case 8:
-                _context4.prev = 8;
-                _context4.t0 = _context4["catch"](1);
+              case 10:
+                _context4.prev = 10;
+                _context4.t0 = _context4["catch"](3);
                 console.log("pendingToDo", _context4.t0);
 
-              case 11:
+              case 13:
               case "end":
                 return _context4.stop();
             }
           }
-        }, _callee4, null, [[1, 8]]);
+        }, _callee4, null, [[3, 10]]);
       }))();
     },
     pendingToDo: function pendingToDo() {
@@ -7192,12 +7194,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context5.prev = _context5.next) {
               case 0:
                 console.log(_this5.colorBand);
+                _this5.task.status = 'pendiente';
+                console.log(_this5.task);
                 _this5.colorBand = false;
-                _context5.prev = 2;
-                _context5.next = 5;
+                _context5.prev = 4;
+                _context5.next = 7;
                 return axios.post('/api/tasks', _this5.task);
 
-              case 5:
+              case 7:
                 response = _context5.sent;
 
                 if (response.data.message === "No hay nada en la BD") {
@@ -7210,20 +7214,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this5.$store.commit('setTasks', _this5.tasks);
                 }
 
-                _context5.next = 12;
+                _context5.next = 14;
                 break;
 
-              case 9:
-                _context5.prev = 9;
-                _context5.t0 = _context5["catch"](2);
+              case 11:
+                _context5.prev = 11;
+                _context5.t0 = _context5["catch"](4);
                 console.log("pendingToDo", _context5.t0);
 
-              case 12:
+              case 14:
               case "end":
                 return _context5.stop();
             }
           }
-        }, _callee5, null, [[2, 9]]);
+        }, _callee5, null, [[4, 11]]);
       }))();
     },
     volverPrincipal: function volverPrincipal() {

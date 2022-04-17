@@ -44,41 +44,7 @@ class TaskController extends Controller
             setlocale(LC_ALL, 'es_ES');
             $date = Carbon::parse($task->created_at);
             $objectTask->created_at = $date->formatLocalized('%d %B %Y'); ;
-            $date2 = Carbon::parse($task->created_at);
-            $objectTask->updated_at = $date2->formatLocalized('%d %b %Y');;
-            array_push($array, $objectTask);
-        }
-        if ($array) {
-            return response()->json([
-                "tasks" => $array
-            ], 200);
-        } else {
-            return response()->json([
-                "status" => "error",
-                "message" => "No hay nada en la BD"
-            ], 250);
-        }
-    }
-
-    public function getTaskStatusTer(Request $request) {
-        $tasks = Task::where('status', 'terminado')->get(); //obtenemos las tareas por estado
-        $array = array(); //Creamos un areglo para almacenar las tareas y devolverlas
-        
-        foreach($tasks as $task) {
-            $user = User::whereId($task->user_id)->first(); // obtenemos el usuario al que fue asignado la tarea (por si las dudas)
-            
-            $objectTask = new \stdClass();
-            $objectTask->id_task = $task->id;
-            $objectTask->title = $task->title;
-            $objectTask->description = $task->description;
-            $objectTask->status = $task->status;
-            $objectTask->url = $task->url;
-            $objectTask->user_name = $user->name;
-            $objectTask->id_user = $user->id;
-            setlocale(LC_ALL, 'es_ES');
-            $date = Carbon::parse($task->created_at);
-            $objectTask->created_at = $date->formatLocalized('%d %B %Y'); ;
-            $date2 = Carbon::parse($task->created_at);
+            $date2 = Carbon::parse($task->updated_at);
             $objectTask->updated_at = $date2->formatLocalized('%d %b %Y');;
             array_push($array, $objectTask);
         }
@@ -244,7 +210,7 @@ class TaskController extends Controller
     }
 
     /**
-     * Change the specified state of storage. Funcion que nos permite colocar en TERMINADO en lugar de borrar el regitro
+     * Change the specified state of storage. Funcion que nos permite colocar en TERMINADO para actualizar el registro
      * @return \Illuminate\Http\Response
      */
     public function updateStatus(Request $request) {
