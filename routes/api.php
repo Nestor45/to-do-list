@@ -24,9 +24,12 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('me', 'AuthController@me');
 });
 
-Route::post('task/create', 'TaskController@create');
-Route::post('tasks', 'TaskController@getTaskStatus');
-Route::post('tasks/ter', 'TaskController@getTaskStatusTer');
-Route::post('task/delete', 'TaskController@destroyStatus');
-Route::post('task/update', 'TaskController@updateStatus');
-Route::post('task/edit','TaskController@editTask');
+Route::post('tasks', 'TaskController@getTaskStatus'); // ENDPOINT API
+
+Route::group(['middleware' => 'jwt.auth'], function ($router) {
+    Route::post('task/create', 'TaskController@create');
+    Route::post('tasks/ter', 'TaskController@getTaskStatusTer');
+    Route::post('task/delete', 'TaskController@destroyStatus');
+    Route::post('task/update', 'TaskController@updateStatus');
+    Route::post('task/edit','TaskController@editTask');
+});
