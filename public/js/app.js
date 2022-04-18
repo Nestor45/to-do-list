@@ -6932,10 +6932,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'registrar',
   data: function data() {
     return {
+      search: '',
       colorBand: false,
       page: 1,
       pageCount: 1,
@@ -32378,295 +32388,326 @@ var render = function () {
                 1
               ),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-12" }, [
-                _c("div", { staticClass: "text-left mt-2" }, [
+              _c(
+                "div",
+                { staticClass: "col-md-12" },
+                [
                   _c(
-                    "p",
-                    { staticClass: "text-h4 text--primary text-center" },
-                    [_vm._v("TAREAS")]
-                  ),
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "mt-4 col-md-12" },
-                  [
-                    _c("v-data-table", {
-                      attrs: {
-                        headers: _vm.encabezadoTasks,
-                        items: _vm.tasksInfoPend,
-                        "items-per-page": _vm.itemsPerPage,
-                        "no-data-text": "No se encontraron Datos",
-                        "hide-default-footer": "",
-                        page: _vm.page,
-                      },
-                      on: {
-                        "page-count": function ($event) {
-                          _vm.pageCount = $event
-                        },
-                        "update:page": function ($event) {
-                          _vm.page = $event
-                        },
-                      },
-                      scopedSlots: _vm._u(
-                        [
-                          {
-                            key: "item.actions",
-                            fn: function (ref) {
-                              var item = ref.item
-                              return [
-                                _c(
-                                  "v-icon",
-                                  {
-                                    attrs: { small: "", color: "0D3E67" },
-                                    on: {
-                                      click: function ($event) {
-                                        return _vm.editItem(item)
-                                      },
-                                    },
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                                mdi-pencil\n                            "
-                                    ),
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-icon",
-                                  {
-                                    attrs: { small: "", color: "#BC2222" },
-                                    on: {
-                                      click: function ($event) {
-                                        return _vm.deleteItem(item)
-                                      },
-                                    },
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                                mdi-delete\n                            "
-                                    ),
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-icon",
-                                  {
-                                    attrs: { small: "", color: "#0D3E67" },
-                                    on: {
-                                      click: function ($event) {
-                                        return _vm.finished(item)
-                                      },
-                                    },
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                                mdi-checkbox-marked-circle-outline\n                            "
-                                    ),
-                                  ]
-                                ),
-                              ]
-                            },
-                          },
-                        ],
-                        null,
-                        true
+                    "v-card-title",
+                    [
+                      _vm._v(
+                        "\n                        TAREAS\n                        "
                       ),
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "text-center pt-2" },
-                      [
-                        _c("v-pagination", {
-                          attrs: { length: _vm.pageCount },
-                          model: {
-                            value: _vm.page,
-                            callback: function ($$v) {
-                              _vm.page = $$v
-                            },
-                            expression: "page",
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c("v-text-field", {
+                        attrs: {
+                          "append-icon": "mdi-magnify",
+                          label: "Buscar",
+                          "single-line": "",
+                          "hide-details": "",
+                        },
+                        model: {
+                          value: _vm.search,
+                          callback: function ($$v) {
+                            _vm.search = $$v
                           },
-                        }),
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _vm.editedTask
-                      ? [
-                          _c(
-                            "v-dialog",
+                          expression: "search",
+                        },
+                      }),
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "mt-4 col-md-12" },
+                    [
+                      _c("v-data-table", {
+                        attrs: {
+                          search: _vm.search,
+                          headers: _vm.encabezadoTasks,
+                          items: _vm.tasksInfoPend,
+                          "items-per-page": _vm.itemsPerPage,
+                          "no-data-text": "No se encontraron Datos",
+                          "hide-default-footer": "",
+                          page: _vm.page,
+                        },
+                        on: {
+                          "page-count": function ($event) {
+                            _vm.pageCount = $event
+                          },
+                          "update:page": function ($event) {
+                            _vm.page = $event
+                          },
+                        },
+                        scopedSlots: _vm._u(
+                          [
                             {
-                              model: {
-                                value: _vm.editedTask,
-                                callback: function ($$v) {
-                                  _vm.editedTask = $$v
-                                },
-                                expression: "editedTask",
-                              },
-                            },
-                            [
-                              _c(
-                                "v-card",
-                                [
-                                  _c("v-card-title", [
-                                    _c(
-                                      "span",
-                                      { staticClass: "headline text-center" },
-                                      [_vm._v("Editar Imputado Fisico")]
-                                    ),
-                                  ]),
+                              key: "item.actions",
+                              fn: function (ref) {
+                                var item = ref.item
+                                return [
+                                  _c(
+                                    "v-icon",
+                                    {
+                                      attrs: { small: "", color: "0D3E67" },
+                                      on: {
+                                        click: function ($event) {
+                                          return _vm.editItem(item)
+                                        },
+                                      },
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                mdi-pencil\n                            "
+                                      ),
+                                    ]
+                                  ),
                                   _vm._v(" "),
                                   _c(
-                                    "v-card-text",
+                                    "v-icon",
+                                    {
+                                      attrs: { small: "", color: "#BC2222" },
+                                      on: {
+                                        click: function ($event) {
+                                          return _vm.deleteItem(item)
+                                        },
+                                      },
+                                    },
                                     [
-                                      _c(
-                                        "v-container",
-                                        [
-                                          _c(
-                                            "v-row",
-                                            [
-                                              _c(
-                                                "v-form",
-                                                {
-                                                  ref: "formTask",
-                                                  staticClass: "col-12",
-                                                },
-                                                [
-                                                  _c(
-                                                    "v-col",
-                                                    { attrs: { cols: "12" } },
-                                                    [
-                                                      _c("v-text-field", {
-                                                        attrs: {
-                                                          rules: _vm.titleRules,
-                                                          label: "Titutlo:",
-                                                          required: "",
-                                                        },
-                                                        model: {
-                                                          value:
-                                                            _vm.editedItem
-                                                              .title,
-                                                          callback: function (
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              _vm.editedItem,
-                                                              "title",
-                                                              $$v
-                                                            )
-                                                          },
-                                                          expression:
-                                                            "editedItem.title",
-                                                        },
-                                                      }),
-                                                    ],
-                                                    1
-                                                  ),
-                                                  _vm._v(" "),
-                                                  _c(
-                                                    "v-col",
-                                                    { attrs: { cols: "12" } },
-                                                    [
-                                                      _c("v-text-field", {
-                                                        attrs: {
-                                                          rules:
-                                                            _vm.descriptionRules,
-                                                          label: "Descripcion:",
-                                                          required: "",
-                                                        },
-                                                        model: {
-                                                          value:
-                                                            _vm.editedItem
-                                                              .description,
-                                                          callback: function (
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              _vm.editedItem,
-                                                              "description",
-                                                              $$v
-                                                            )
-                                                          },
-                                                          expression:
-                                                            "editedItem.description",
-                                                        },
-                                                      }),
-                                                    ],
-                                                    1
-                                                  ),
-                                                ],
-                                                1
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "v-card-actions",
-                                                { staticClass: "mt-10" },
-                                                [
-                                                  _c("v-spacer"),
-                                                  _vm._v(" "),
-                                                  _c(
-                                                    "div",
-                                                    {
-                                                      staticClass:
-                                                        "text-center",
-                                                    },
-                                                    [
-                                                      _c(
-                                                        "v-btn",
-                                                        {
-                                                          attrs: {
-                                                            color: "red",
-                                                            text: "",
-                                                          },
-                                                          on: {
-                                                            click:
-                                                              _vm.volverPrincipal,
-                                                          },
-                                                        },
-                                                        [_vm._v("Cancelar")]
-                                                      ),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "v-btn",
-                                                        {
-                                                          attrs: {
-                                                            color: "green",
-                                                            text: "",
-                                                          },
-                                                          on: {
-                                                            click: _vm.save,
-                                                          },
-                                                        },
-                                                        [_vm._v("Editar Tarea")]
-                                                      ),
-                                                    ],
-                                                    1
-                                                  ),
-                                                ],
-                                                1
-                                              ),
-                                            ],
-                                            1
-                                          ),
-                                        ],
-                                        1
+                                      _vm._v(
+                                        "\n                                mdi-delete\n                            "
                                       ),
-                                    ],
-                                    1
+                                    ]
                                   ),
-                                ],
-                                1
-                              ),
-                            ],
-                            1
-                          ),
-                        ]
-                      : _vm._e(),
-                  ],
-                  2
-                ),
-              ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-icon",
+                                    {
+                                      attrs: { small: "", color: "#0D3E67" },
+                                      on: {
+                                        click: function ($event) {
+                                          return _vm.finished(item)
+                                        },
+                                      },
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                mdi-checkbox-marked-circle-outline\n                            "
+                                      ),
+                                    ]
+                                  ),
+                                ]
+                              },
+                            },
+                          ],
+                          null,
+                          true
+                        ),
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "text-center pt-2" },
+                        [
+                          _c("v-pagination", {
+                            attrs: { length: _vm.pageCount },
+                            model: {
+                              value: _vm.page,
+                              callback: function ($$v) {
+                                _vm.page = $$v
+                              },
+                              expression: "page",
+                            },
+                          }),
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm.editedTask
+                        ? [
+                            _c(
+                              "v-dialog",
+                              {
+                                model: {
+                                  value: _vm.editedTask,
+                                  callback: function ($$v) {
+                                    _vm.editedTask = $$v
+                                  },
+                                  expression: "editedTask",
+                                },
+                              },
+                              [
+                                _c(
+                                  "v-card",
+                                  [
+                                    _c("v-card-title", [
+                                      _c(
+                                        "span",
+                                        { staticClass: "headline text-center" },
+                                        [_vm._v("Editar Imputado Fisico")]
+                                      ),
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-card-text",
+                                      [
+                                        _c(
+                                          "v-container",
+                                          [
+                                            _c(
+                                              "v-row",
+                                              [
+                                                _c(
+                                                  "v-form",
+                                                  {
+                                                    ref: "formTask",
+                                                    staticClass: "col-12",
+                                                  },
+                                                  [
+                                                    _c(
+                                                      "v-col",
+                                                      { attrs: { cols: "12" } },
+                                                      [
+                                                        _c("v-text-field", {
+                                                          attrs: {
+                                                            rules:
+                                                              _vm.titleRules,
+                                                            label: "Titutlo:",
+                                                            required: "",
+                                                          },
+                                                          model: {
+                                                            value:
+                                                              _vm.editedItem
+                                                                .title,
+                                                            callback: function (
+                                                              $$v
+                                                            ) {
+                                                              _vm.$set(
+                                                                _vm.editedItem,
+                                                                "title",
+                                                                $$v
+                                                              )
+                                                            },
+                                                            expression:
+                                                              "editedItem.title",
+                                                          },
+                                                        }),
+                                                      ],
+                                                      1
+                                                    ),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "v-col",
+                                                      { attrs: { cols: "12" } },
+                                                      [
+                                                        _c("v-text-field", {
+                                                          attrs: {
+                                                            rules:
+                                                              _vm.descriptionRules,
+                                                            label:
+                                                              "Descripcion:",
+                                                            required: "",
+                                                          },
+                                                          model: {
+                                                            value:
+                                                              _vm.editedItem
+                                                                .description,
+                                                            callback: function (
+                                                              $$v
+                                                            ) {
+                                                              _vm.$set(
+                                                                _vm.editedItem,
+                                                                "description",
+                                                                $$v
+                                                              )
+                                                            },
+                                                            expression:
+                                                              "editedItem.description",
+                                                          },
+                                                        }),
+                                                      ],
+                                                      1
+                                                    ),
+                                                  ],
+                                                  1
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "v-card-actions",
+                                                  { staticClass: "mt-10" },
+                                                  [
+                                                    _c("v-spacer"),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "div",
+                                                      {
+                                                        staticClass:
+                                                          "text-center",
+                                                      },
+                                                      [
+                                                        _c(
+                                                          "v-btn",
+                                                          {
+                                                            attrs: {
+                                                              color: "red",
+                                                              text: "",
+                                                            },
+                                                            on: {
+                                                              click:
+                                                                _vm.volverPrincipal,
+                                                            },
+                                                          },
+                                                          [_vm._v("Cancelar")]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "v-btn",
+                                                          {
+                                                            attrs: {
+                                                              color: "green",
+                                                              text: "",
+                                                            },
+                                                            on: {
+                                                              click: _vm.save,
+                                                            },
+                                                          },
+                                                          [
+                                                            _vm._v(
+                                                              "Editar Tarea"
+                                                            ),
+                                                          ]
+                                                        ),
+                                                      ],
+                                                      1
+                                                    ),
+                                                  ],
+                                                  1
+                                                ),
+                                              ],
+                                              1
+                                            ),
+                                          ],
+                                          1
+                                        ),
+                                      ],
+                                      1
+                                    ),
+                                  ],
+                                  1
+                                ),
+                              ],
+                              1
+                            ),
+                          ]
+                        : _vm._e(),
+                    ],
+                    2
+                  ),
+                ],
+                1
+              ),
             ],
             1
           ),

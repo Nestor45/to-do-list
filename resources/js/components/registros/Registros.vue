@@ -54,11 +54,20 @@
                         </v-dialog>
                     </v-toolbar>
                     <div class="col-md-12">
-                        <div class="text-left mt-2">
-                            <p class="text-h4 text--primary text-center">TAREAS</p>
-                        </div>
+                        <v-card-title>
+                            TAREAS
+                            <v-spacer></v-spacer>
+                            <v-text-field
+                                v-model="search"
+                                append-icon="mdi-magnify"
+                                label="Buscar"
+                                single-line
+                                hide-details
+                            ></v-text-field>
+                        </v-card-title>
                         <div class="mt-4 col-md-12">
                             <v-data-table
+                                :search="search"
                                 :headers="encabezadoTasks"
                                 :items="tasksInfoPend"
                                 :items-per-page="itemsPerPage"
@@ -137,6 +146,7 @@ export default {
     name: 'registrar',
     data() {
         return {
+            search: '',
             colorBand: false,
             page: 1,
             pageCount: 1,
