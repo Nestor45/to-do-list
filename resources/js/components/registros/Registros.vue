@@ -12,7 +12,7 @@
                         </v-btn>
                         <v-divider class="mx-2" inset vertical ></v-divider>
                         <v-spacer></v-spacer>
-                        <v-dialog v-model="dialogTask" max-width="600px">
+                        <v-dialog v-model="dialog" max-width="600px" persistent>
                             <template v-slot:activator="{on, attrs}">
                                 <v-btn
                                     v-bind="attrs"
@@ -26,24 +26,24 @@
                             <template >
                                 <v-card>
                                     <v-card-title>
-                                        <span class="headline text-center">Nuevo Imputado Fisico</span>
+                                        <span class="text-h5">{{ formTitle }}</span>
                                     </v-card-title>
                                     <v-card-text>
                                         <v-container>
                                             <v-row>
                                                 <v-form class="col-12" ref="formTask">
                                                     <v-col cols="12">
-                                                        <v-text-field v-model="task.title" :rules="titleRules" label="Titutlo:" required></v-text-field>
+                                                        <v-text-field v-model="editedItem.title" :rules="titleRules" label="Titutlo:" required></v-text-field>
                                                     </v-col>
                                                     <v-col cols="12">
-                                                        <v-text-field v-model="task.description" :rules="descriptionRules" label="Descripcion:" required></v-text-field>
+                                                        <v-text-field v-model="editedItem.description" :rules="descriptionRules" label="Descripcion:" required></v-text-field>
                                                     </v-col>
                                                 </v-form>
                                                 <v-card-actions class="mt-10">
                                                     <v-spacer></v-spacer>
                                                     <div class="text-center">
-                                                        <v-btn color="red" text @click="volverPrincipal">Cancelar</v-btn>
-                                                        <v-btn color="green" text @click="nuevoTask">Agregar Tarea Nueva</v-btn>
+                                                        <v-btn color="red" text @click="close">Cancelar</v-btn>
+                                                        <v-btn color="green" text @click="nuevoTask">Guardar Tarea</v-btn>
                                                     </div>
                                                 </v-card-actions>
                                             </v-row>
@@ -103,36 +103,6 @@
                                     :length="pageCount"
                                 ></v-pagination>
                             </div>
-                            <template v-if="editedTask">
-                                <v-dialog v-model="editedTask">
-                                    <v-card>
-                                        <v-card-title>
-                                            <span class="headline text-center">Editar Imputado Fisico</span>
-                                        </v-card-title>
-                                        <v-card-text>
-                                        <v-container>
-                                            <v-row>
-                                                <v-form class="col-12" ref="formTask">
-                                                    <v-col cols="12">
-                                                        <v-text-field v-model="editedItem.title" :rules="titleRules" label="Titutlo:" required></v-text-field>
-                                                    </v-col>
-                                                    <v-col cols="12">
-                                                        <v-text-field v-model="editedItem.description" :rules="descriptionRules" label="Descripcion:" required></v-text-field>
-                                                    </v-col>
-                                                </v-form>
-                                                <v-card-actions class="mt-10">
-                                                    <v-spacer></v-spacer>
-                                                    <div class="text-center">
-                                                        <v-btn color="red" text @click="volverPrincipal">Cancelar</v-btn>
-                                                        <v-btn color="green" text @click="save">Editar Tarea</v-btn>
-                                                    </div>
-                                                </v-card-actions>
-                                            </v-row>
-                                        </v-container>
-                                    </v-card-text>
-                                    </v-card>
-                                </v-dialog>
-                            </template>
                         </div>
                     </div>
                 </v-card>
@@ -146,6 +116,7 @@ export default {
     name: 'registrar',
     data() {
         return {
+            editedIndex: -1,
             search: '',
             colorBand: false,
             page: 1,
@@ -201,21 +172,15 @@ export default {
         tasksInfoPend() {
             return this.$store.getters.getTasks
         },
+        formTitle () {
+            return this.editedIndex === -1 ? 'Nueva Tarea' : 'Editar Tarea'
+        },
     },
     created(){
         this.infoUser()
         this.pendingToDo()
     },
     methods: {
-        editItem(item) {
-            this.editedTask = true
-            this.editedItem.title = item.title
-            this.editedItem.description = item.description
-            this.editedItem.id_task = item.id_task
-            this.editedItem.id_user = item.id_user
-            console.log(item)
-            
-        },
         async save(){
             try {
                 let response = await axios.post('/api/task/edit', this.editedItem)
@@ -298,10 +263,6 @@ export default {
                 console.log("pendingToDo",error)
             }
         },
-        volverPrincipal() {
-            this.dialogTask = false
-            this.editedTask = false
-        },
         infoUser(){
             let $user = this.$store.getters.currentUser
             this.task.user_id = $user.id 
@@ -319,6 +280,18 @@ export default {
             } catch (error) {
                 alert("algo esta mal al registrar")
             }
+        },
+        editItem(item) {
+            this.editedIndex = this.tasks.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.dialog = true
+        },
+        close() {
+            this.dialog = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.task)
+                this.editedIndex = -1
+            })
         },
     }
 }

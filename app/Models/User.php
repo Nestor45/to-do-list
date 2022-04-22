@@ -65,7 +65,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Un usuario tiene muchos task(tareas)
+     * Un usuario tiene muchos tasks(tareas)
      */
     public function tasks()
     {
