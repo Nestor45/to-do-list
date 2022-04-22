@@ -6911,6 +6911,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'registrar',
   data: function data() {
@@ -6930,8 +6941,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       tasks: [],
       editedTask: false,
       task: {
-        title: '',
-        description: '',
         status: '',
         user_id: ''
       },
@@ -6984,16 +6993,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var response;
+        var response, $user, _response;
+
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.prev = 0;
-                _context.next = 3;
+                if (!(_this.editedIndex > -1)) {
+                  _context.next = 13;
+                  break;
+                }
+
+                _context.prev = 1;
+                _context.next = 4;
                 return axios.post('/api/task/edit', _this.editedItem);
 
-              case 3:
+              case 4:
                 response = _context.sent;
 
                 if (response.status === 200) {
@@ -7006,20 +7021,53 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   alert("algo esta mal al Editar el registro");
                 }
 
-                _context.next = 10;
+                _context.next = 11;
                 break;
 
-              case 7:
-                _context.prev = 7;
-                _context.t0 = _context["catch"](0);
+              case 8:
+                _context.prev = 8;
+                _context.t0 = _context["catch"](1);
                 alert("algo esta mal al Editar");
 
-              case 10:
+              case 11:
+                _context.next = 25;
+                break;
+
+              case 13:
+                $user = _this.$store.getters.currentUser;
+                _this.editedItem.user_id = $user.id;
+                _context.prev = 15;
+                _context.next = 18;
+                return axios.post('/api/task/create', _this.editedItem);
+
+              case 18:
+                _response = _context.sent;
+
+                if (_response.status === 200) {
+                  _this.pendingToDo();
+
+                  _this.dialogTask = false;
+                } else {
+                  alert("algo esta mal al registrar");
+                }
+
+                _context.next = 25;
+                break;
+
+              case 22:
+                _context.prev = 22;
+                _context.t1 = _context["catch"](15);
+                alert("algo esta mal al registrar");
+
+              case 25:
+                _this.close();
+
+              case 26:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 7]]);
+        }, _callee, null, [[1, 8], [15, 22]]);
       }))();
     },
     finished: function finished(item) {
@@ -7031,45 +7079,47 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.prev = 0;
+                // Funcion que nos permite actualizar a terminado
+                console.log(item);
+                _context2.prev = 1;
 
                 if (!confirm('Realmente Desea Terminar esta Tarea')) {
-                  _context2.next = 6;
+                  _context2.next = 7;
                   break;
                 }
 
-                _context2.next = 4;
+                _context2.next = 5;
                 return axios.post('/api/task/update', item);
 
-              case 4:
+              case 5:
                 response = _context2.sent;
 
                 if (response.status === 200) {
                   _this2.pendingToDo();
                 } else if (response.status === 250) {
-                  alert("El dato ya ha fue actualizado");
+                  alert("El dato ya ha fue terminado");
                 } else {
                   alert("algo esta mal al Actualizar");
                 }
 
-              case 6:
-                _context2.next = 11;
+              case 7:
+                _context2.next = 12;
                 break;
 
-              case 8:
-                _context2.prev = 8;
-                _context2.t0 = _context2["catch"](0);
-                console.log("finished", _context2.t0);
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](1);
+                console.error("finished", _context2.t0);
 
-              case 11:
+              case 12:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[0, 8]]);
+        }, _callee2, null, [[1, 9]]);
       }))();
     },
-    deleteItem: function deleteItem(item) {
+    toDoFinished: function toDoFinished() {
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
@@ -7078,44 +7128,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _this3.dialogDelete = true;
-                _context3.prev = 1;
-
-                if (!confirm('Realmente Desea Eliminar esta Tarea')) {
-                  _context3.next = 7;
-                  break;
-                }
-
+                // Funcion para el boton de terminados
+                _this3.colorBand = true;
+                _this3.task.status = 'terminado';
+                _context3.prev = 2;
                 _context3.next = 5;
-                return axios.post('/api/task/delete', item);
+                return axios.post('/api/tasks', _this3.task);
 
               case 5:
                 response = _context3.sent;
 
-                if (response.status === 200) {
-                  _this3.pendingToDo();
+                if (response.data.message === "No hay nada en la BD") {
+                  _this3.there_is_task = false;
+                  console.log("no hay preguntas");
                 } else {
-                  alert("algo esta mal al Eliminar");
+                  _this3.there_is_task = true;
+                  _this3.tasks = response.data.tasks;
+
+                  _this3.$store.commit('setTasks', _this3.tasks);
                 }
 
-              case 7:
                 _context3.next = 12;
                 break;
 
               case 9:
                 _context3.prev = 9;
-                _context3.t0 = _context3["catch"](1);
-                console.log("deleteItem", _context3.t0);
+                _context3.t0 = _context3["catch"](2);
+                console.error("pendingToDo", _context3.t0);
 
               case 12:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, null, [[1, 9]]);
+        }, _callee3, null, [[2, 9]]);
       }))();
     },
-    toDoFinished: function toDoFinished() {
+    pendingToDo: function pendingToDo() {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
@@ -7124,14 +7173,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _this4.colorBand = true;
-                _this4.task.status = 'terminado';
-                console.log(_this4.task);
-                _context4.prev = 3;
-                _context4.next = 6;
+                // Funcion para el boton de pendientes
+                _this4.task.status = 'pendiente';
+                _this4.colorBand = false;
+                _context4.prev = 2;
+                _context4.next = 5;
                 return axios.post('/api/tasks', _this4.task);
 
-              case 6:
+              case 5:
                 response = _context4.sent;
 
                 if (response.data.message === "No hay nada en la BD") {
@@ -7144,112 +7193,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this4.$store.commit('setTasks', _this4.tasks);
                 }
 
-                _context4.next = 13;
+                _context4.next = 12;
                 break;
 
-              case 10:
-                _context4.prev = 10;
-                _context4.t0 = _context4["catch"](3);
-                console.log("pendingToDo", _context4.t0);
+              case 9:
+                _context4.prev = 9;
+                _context4.t0 = _context4["catch"](2);
+                console.error("pendingToDo", _context4.t0);
 
-              case 13:
+              case 12:
               case "end":
                 return _context4.stop();
             }
           }
-        }, _callee4, null, [[3, 10]]);
-      }))();
-    },
-    pendingToDo: function pendingToDo() {
-      var _this5 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
-        var response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                console.log(_this5.colorBand);
-                _this5.task.status = 'pendiente';
-                console.log(_this5.task);
-                _this5.colorBand = false;
-                _context5.prev = 4;
-                _context5.next = 7;
-                return axios.post('/api/tasks', _this5.task);
-
-              case 7:
-                response = _context5.sent;
-
-                if (response.data.message === "No hay nada en la BD") {
-                  _this5.there_is_task = false;
-                  console.log("no hay preguntas");
-                } else {
-                  _this5.there_is_task = true;
-                  _this5.tasks = response.data.tasks;
-
-                  _this5.$store.commit('setTasks', _this5.tasks);
-                }
-
-                _context5.next = 14;
-                break;
-
-              case 11:
-                _context5.prev = 11;
-                _context5.t0 = _context5["catch"](4);
-                console.log("pendingToDo", _context5.t0);
-
-              case 14:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5, null, [[4, 11]]);
+        }, _callee4, null, [[2, 9]]);
       }))();
     },
     infoUser: function infoUser() {
       var $user = this.$store.getters.currentUser;
       this.task.user_id = $user.id;
-    },
-    nuevoTask: function nuevoTask() {
-      var _this6 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
-        var response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                _this6.bandTask = true;
-                _context6.prev = 1;
-                _context6.next = 4;
-                return axios.post('/api/task/create', _this6.task);
-
-              case 4:
-                response = _context6.sent;
-
-                if (response.status === 200) {
-                  _this6.pendingToDo();
-
-                  _this6.dialogTask = false;
-                } else {
-                  alert("algo esta mal al registrar");
-                }
-
-                _context6.next = 11;
-                break;
-
-              case 8:
-                _context6.prev = 8;
-                _context6.t0 = _context6["catch"](1);
-                alert("algo esta mal al registrar");
-
-              case 11:
-              case "end":
-                return _context6.stop();
-            }
-          }
-        }, _callee6, null, [[1, 8]]);
-      }))();
     },
     editItem: function editItem(item) {
       this.editedIndex = this.tasks.indexOf(item);
@@ -7257,11 +7219,65 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.dialog = true;
     },
     close: function close() {
-      var _this7 = this;
+      var _this5 = this;
 
       this.dialog = false;
       this.$nextTick(function () {
-        _this7.editedItem = Object.assign({}, _this7.task);
+        _this5.editedItem = Object.assign({}, _this5.task);
+        _this5.editedIndex = -1;
+      });
+    },
+    deleteItem: function deleteItem(item) {
+      this.editedIndex = this.tasks.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+    },
+    deleteItemConfirm: function deleteItemConfirm() {
+      var _this6 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.prev = 0;
+                _context5.next = 3;
+                return axios.post('/api/task/delete', _this6.editedItem);
+
+              case 3:
+                response = _context5.sent;
+
+                if (response.status === 200) {
+                  _this6.pendingToDo();
+
+                  _this6.closeDelete();
+                } else {
+                  alert("algo esta mal al Eliminar");
+                }
+
+                _context5.next = 10;
+                break;
+
+              case 7:
+                _context5.prev = 7;
+                _context5.t0 = _context5["catch"](0);
+                console.error("deleteItem", _context5.t0);
+
+              case 10:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, null, [[0, 7]]);
+      }))();
+    },
+    closeDelete: function closeDelete() {
+      var _this7 = this;
+
+      this.dialogDelete = false;
+      this.$nextTick(function () {
+        _this7.editedItem = Object.assign({}, _this7.defaultItem);
         _this7.editedIndex = -1;
       });
     }
@@ -32326,9 +32342,7 @@ var render = function () {
                                                       color: "green",
                                                       text: "",
                                                     },
-                                                    on: {
-                                                      click: _vm.nuevoTask,
-                                                    },
+                                                    on: { click: _vm.save },
                                                   },
                                                   [_vm._v("Guardar Tarea")]
                                                 ),
@@ -32353,6 +32367,60 @@ var render = function () {
                       ],
                     ],
                     2
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-dialog",
+                    {
+                      attrs: { "max-width": "500px" },
+                      model: {
+                        value: _vm.dialogDelete,
+                        callback: function ($$v) {
+                          _vm.dialogDelete = $$v
+                        },
+                        expression: "dialogDelete",
+                      },
+                    },
+                    [
+                      _c(
+                        "v-card",
+                        [
+                          _c("v-card-title", { staticClass: "text-h5" }, [
+                            _vm._v("¿Realmente desea eliminar el elemento?"),
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "v-card-actions",
+                            [
+                              _c("v-spacer"),
+                              _vm._v(" "),
+                              _c(
+                                "v-btn",
+                                {
+                                  attrs: { color: "blue darken-1", text: "" },
+                                  on: { click: _vm.closeDelete },
+                                },
+                                [_vm._v("Cancel")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-btn",
+                                {
+                                  attrs: { color: "error", text: "" },
+                                  on: { click: _vm.deleteItemConfirm },
+                                },
+                                [_vm._v("Eliminar")]
+                              ),
+                              _vm._v(" "),
+                              _c("v-spacer"),
+                            ],
+                            1
+                          ),
+                        ],
+                        1
+                      ),
+                    ],
+                    1
                   ),
                 ],
                 1
@@ -32441,7 +32509,7 @@ var render = function () {
                                       attrs: { small: "", color: "#BC2222" },
                                       on: {
                                         click: function ($event) {
-                                          return _vm.deleteItem(item)
+                                          return _vm.deleteItem2(item)
                                         },
                                       },
                                     },

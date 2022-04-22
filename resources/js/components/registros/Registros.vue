@@ -43,7 +43,7 @@
                                                     <v-spacer></v-spacer>
                                                     <div class="text-center">
                                                         <v-btn color="red" text @click="close">Cancelar</v-btn>
-                                                        <v-btn color="green" text @click="nuevoTask">Guardar Tarea</v-btn>
+                                                        <v-btn color="green" text @click="save">Guardar Tarea</v-btn>
                                                     </div>
                                                 </v-card-actions>
                                             </v-row>
@@ -51,6 +51,17 @@
                                     </v-card-text>
                                 </v-card>
                             </template>
+                        </v-dialog>
+                        <v-dialog v-model="dialogDelete" max-width="500px">
+                            <v-card>
+                                <v-card-title class="text-h5">¿Realmente desea eliminar el elemento?</v-card-title>
+                                <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                                <v-btn color="error" text @click="deleteItemConfirm">Eliminar</v-btn>
+                                <v-spacer></v-spacer>
+                                </v-card-actions>
+                            </v-card>
                         </v-dialog>
                     </v-toolbar>
                     <div class="col-md-12">
@@ -87,7 +98,7 @@
                                 <v-icon
                                     small
                                     color="#BC2222"
-                                    @click="deleteItem(item)"
+                                    @click="deleteItem2(item)"
                                 >
                                     mdi-delete
                                 </v-icon>
@@ -131,8 +142,6 @@ export default {
             tasks: [],
             editedTask: false,
             task: {
-                title: '',
-                description:'',
                 status:'',
                 user_id:'',
             },
@@ -182,54 +191,59 @@ export default {
     },
     methods: {
         async save(){
-            try {
-                let response = await axios.post('/api/task/edit', this.editedItem)
-                if (response.status === 200) {
-                    console.log(response)
-                    this.pendingToDo()
-                    this.editedTask = false
-                } else {
-                    alert("algo esta mal al Editar el registro")
+            // Funcion que nos permite agregar o actualizar un tarea
+            if (this.editedIndex > -1) {
+                try {
+                    let response = await axios.post('/api/task/edit', this.editedItem)
+                    if (response.status === 200) {
+                        console.log(response)
+                        this.pendingToDo()
+                        this.editedTask = false
+                    } else {
+                        alert("algo esta mal al Editar el registro")
+                    }
+                } catch (error) {
+                    alert("algo esta mal al Editar")
                 }
-            } catch (error) {
-                alert("algo esta mal al Editar")
+            } else {
+                let $user = this.$store.getters.currentUser
+                this.editedItem.user_id = $user.id 
+                try {
+                    let response = await axios.post('/api/task/create', this.editedItem)
+                    if (response.status === 200) {
+                        this.pendingToDo()
+                        this.dialogTask = false
+                    } else {
+                        alert("algo esta mal al registrar")
+                    }
+                } catch (error) {
+                    alert("algo esta mal al registrar")
+                }
             }
+            this.close()
         },
         async finished(item) {
+            // Funcion que nos permite actualizar a terminado
+            console.log(item)
             try {
                 if (confirm('Realmente Desea Terminar esta Tarea')){
                     let response = await axios.post('/api/task/update',item)
                     if (response.status === 200) {
                         this.pendingToDo()
                     }else if(response.status === 250){
-                        alert("El dato ya ha fue actualizado")
+                        alert("El dato ya ha fue terminado")
                     } else {
                         alert("algo esta mal al Actualizar")
                     }
                 }
             } catch (error) {
-                console.log("finished",error)
-            }
-        },
-        async deleteItem(item){
-            this.dialogDelete = true
-            try {
-                if (confirm('Realmente Desea Eliminar esta Tarea')){
-                    let response = await axios.post('/api/task/delete',item)
-                    if (response.status === 200) {
-                        this.pendingToDo()
-                    } else {
-                        alert("algo esta mal al Eliminar")
-                    }
-                }  
-            } catch (error) {
-                console.log("deleteItem",error)
+                console.error("finished",error)
             }
         },
         async toDoFinished(){
+            // Funcion para el boton de terminados
             this.colorBand = true
             this.task.status = 'terminado'
-            console.log(this.task)
             try {
                 let response = await axios.post('/api/tasks',this.task)
                 if (response.data.message === "No hay nada en la BD") {
@@ -241,13 +255,12 @@ export default {
                     this.$store.commit('setTasks', this.tasks)
                 }
             } catch (error) {
-                console.log("pendingToDo",error)
+                console.error("pendingToDo",error)
             }
         },
         async pendingToDo() {
-            console.log(this.colorBand)
+            // Funcion para el boton de pendientes
             this.task.status = 'pendiente'
-            console.log(this.task)
             this.colorBand = false
             try {
                 let response = await axios.post('/api/tasks',this.task)
@@ -260,26 +273,12 @@ export default {
                     this.$store.commit('setTasks', this.tasks)
                 }
             } catch (error) {
-                console.log("pendingToDo",error)
+                console.error("pendingToDo",error)
             }
         },
         infoUser(){
             let $user = this.$store.getters.currentUser
             this.task.user_id = $user.id 
-        },
-        async nuevoTask() {
-            this.bandTask = true
-            try {
-                let response = await axios.post('/api/task/create', this.task)
-                if (response.status === 200) {
-                    this.pendingToDo()
-                    this.dialogTask = false
-                } else {
-                    alert("algo esta mal al registrar")
-                }
-            } catch (error) {
-                alert("algo esta mal al registrar")
-            }
         },
         editItem(item) {
             this.editedIndex = this.tasks.indexOf(item)
@@ -291,6 +290,33 @@ export default {
             this.$nextTick(() => {
                 this.editedItem = Object.assign({}, this.task)
                 this.editedIndex = -1
+            })
+        },
+        deleteItem(item) {
+            this.editedIndex = this.tasks.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.dialogDelete = true
+        },
+        async deleteItemConfirm() {
+            // Funcion que nos permite eliminar
+            try {
+                    let response = await axios.post('/api/task/delete',this.editedItem)
+                    if (response.status === 200) {
+                        this.pendingToDo()
+                        this.closeDelete()
+                    } else {
+                        alert("algo esta mal al Eliminar")
+                    }
+            } catch (error) {
+                console.error("deleteItem",error)
+            }
+            
+        },
+        closeDelete () {
+            this.dialogDelete = false
+            this.$nextTick(() => {
+            this.editedItem = Object.assign({}, this.defaultItem)
+            this.editedIndex = -1
             })
         },
     }

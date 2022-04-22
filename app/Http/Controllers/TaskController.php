@@ -217,10 +217,6 @@ class TaskController extends Controller
 
         $exito = false;
         DB::beginTransaction();
-        return response()->json([
-            "message" => "El dato ya esta terminado",
-            "error" => $request->all()
-        ], 250);
         if ($request->status == 'terminado') {
             return response()->json([
                 "message" => "El dato ya esta terminado",
