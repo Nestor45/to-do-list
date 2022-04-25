@@ -32509,7 +32509,7 @@ var render = function () {
                                       attrs: { small: "", color: "#BC2222" },
                                       on: {
                                         click: function ($event) {
-                                          return _vm.deleteItem2(item)
+                                          return _vm.deleteItem(item)
                                         },
                                       },
                                     },

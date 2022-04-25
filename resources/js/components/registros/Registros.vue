@@ -98,7 +98,7 @@
                                 <v-icon
                                     small
                                     color="#BC2222"
-                                    @click="deleteItem2(item)"
+                                    @click="deleteItem(item)"
                                 >
                                     mdi-delete
                                 </v-icon>
